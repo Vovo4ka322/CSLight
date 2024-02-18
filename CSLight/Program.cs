@@ -14,18 +14,28 @@ namespace ConsoleApp1
     }
     class Squad
     {
+        private readonly List<Fighter> _fighters;
+
         public Squad(List<Fighter> fighters)
         {
-            Fighters = new List<Fighter>(fighters);
+            _fighters = new List<Fighter>(fighters);
         }
 
-        public List<Fighter> Fighters { get; private set; }
+        public IReadOnlyList<Fighter> Fighters => _fighters;
 
         public void ShowInfo()
         {
             foreach (var fighter in Fighters)
             {
                 fighter.ShowInfo();
+            }
+        }
+
+        public void RemoveDeadFighter(Fighter fighter)
+        {
+            if (fighter.Alive == false)
+            {
+                _fighters.Remove(fighter);
             }
         }
     }
@@ -144,6 +154,8 @@ namespace ConsoleApp1
 
     class WarPlane : Fighter
     {
+        private const int CommndNumber = 5;
+
         public WarPlane(string type, int health, int damage, int attemptUseSpell) : base(type, health, damage, attemptUseSpell) { }
 
         public override void Attack(Fighter fighter)
@@ -164,12 +176,7 @@ namespace ConsoleApp1
             int maxValue = 11;
             int hitChance = UserUtils.GenerateRandomNumber(minValue, maxValue);
 
-            if (hitChance > 5)
-            {
-                return true;
-            }
-
-            return false;
+            return hitChance > CommndNumber;
         }
 
         public override void ShowSpell()
@@ -270,14 +277,8 @@ namespace ConsoleApp1
                     secondFighter.ShowInfo();
                 }
 
-                if (firstFighter.Alive == false)
-                {
-                    _firstSquad.Fighters.RemoveAt(i);
-                }
-                else if (secondFighter.Alive == false)
-                {
-                    _secondSquad.Fighters.RemoveAt(randomIndex);
-                }
+                _firstSquad.RemoveDeadFighter(firstFighter);
+                _secondSquad.RemoveDeadFighter(secondFighter);
             }
 
             DetermineWinner(_firstSquad, _secondSquad);
