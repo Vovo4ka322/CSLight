@@ -238,7 +238,11 @@ namespace ConsoleApp1
 
             Console.Write("1) ");
 
+            _firstSquad.ShowInfo();
+
             Console.Write("2) ");
+
+            _secondSquad.ShowInfo();
 
             int minValue = 1;
 
