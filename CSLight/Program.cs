@@ -13,7 +13,7 @@ namespace ConsoleApp1
         }
     }
     class Squad
-    {  
+    {
         public Squad(List<Fighter> fighters)
         {
             Fighters = new List<Fighter>(fighters);
@@ -250,30 +250,33 @@ namespace ConsoleApp1
             {
                 int randomIndex = UserUtils.GenerateRandomNumber(minValue, _secondSquad.Fighters.Count);
 
-                while (_firstSquad.Fighters[i].Health > 0 && _secondSquad.Fighters[randomIndex].Health > 0)
-                {
-                    _firstSquad.Fighters[i].Attack(_secondSquad.Fighters[randomIndex]);
-                    _secondSquad.Fighters[randomIndex].Attack(_firstSquad.Fighters[i]);
+                Fighter firstFighter = _firstSquad.Fighters[i];
+                Fighter secondFighter = _secondSquad.Fighters[randomIndex];
 
-                    _firstSquad.Fighters[i].UseSpell();
-                    _secondSquad.Fighters[randomIndex].UseSpell();
+                while (firstFighter.Alive && secondFighter.Alive)
+                {
+                    firstFighter.Attack(secondFighter);
+                    secondFighter.Attack(firstFighter);
+
+                    firstFighter.UseSpell();
+                    secondFighter.UseSpell();
 
                     Console.Write("1) ");
 
-                    _firstSquad.Fighters[i].ShowInfo();
+                    firstFighter.ShowInfo();
 
                     Console.Write("2) ");
 
-                    _secondSquad.Fighters[randomIndex].ShowInfo();
+                    secondFighter.ShowInfo();
                 }
 
-                if (_firstSquad.Fighters[i].Health <= 0)
+                if (firstFighter.Alive == false)
                 {
                     _firstSquad.Fighters.RemoveAt(i);
                 }
-                else if (_secondSquad.Fighters[i].Health <= 0)
+                else if (secondFighter.Alive == false)
                 {
-                    _secondSquad.Fighters.RemoveAt(i);
+                    _secondSquad.Fighters.RemoveAt(randomIndex);
                 }
             }
 
